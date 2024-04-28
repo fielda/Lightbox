@@ -13,6 +13,8 @@ public protocol LightboxControllerDismissalDelegate: AnyObject {
 public protocol LightboxControllerTouchDelegate: AnyObject {
 
   func lightboxController(_ controller: LightboxController, didTouch image: LightboxImage, at index: Int)
+    
+  func lightboxController(_ controller: LightboxController, pageViewDidZoom hasZoomed: Bool, at index: Int)
 }
 
 public protocol LightboxControllerTapDelegate: AnyObject {
@@ -215,7 +217,7 @@ open class LightboxController: UIViewController {
 
     headerView.frame = CGRect(
       x: 0,
-      y: 16,
+      y: 0,
       width: view.bounds.width,
       height: 100
     )
@@ -413,6 +415,8 @@ extension LightboxController: PageViewDelegate {
   func pageViewDidZoom(_ pageView: PageView) {
     let duration = pageView.hasZoomed ? 0.1 : 0.5
     toggleControls(pageView: pageView, visible: !pageView.hasZoomed, duration: duration, delay: 0.5)
+    imageTouchDelegate?.lightboxController(self, pageViewDidZoom: pageView.hasZoomed, at: currentPage)
+
   }
 
   func pageView(_ pageView: PageView, didTouchPlayButton videoURL: URL) {
